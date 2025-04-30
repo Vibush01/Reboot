@@ -17,6 +17,9 @@ import MacroCalculator from './pages/MacroCalculator';
 import ProgressTracker from './pages/ProgressTracker';
 import Chat from './pages/Chat';
 import Announcements from './pages/Announcements';
+import WorkoutPlans from './pages/WorkoutPlans';
+import Scheduling from './pages/Scheduling';
+import MemberDashboard from './pages/MemberDashboard';
 
 function App() {
     return (
@@ -58,6 +61,21 @@ function App() {
                             <Announcements />
                         </ProtectedRoute>
                     } />
+                    <Route path="/workout-plans" element={
+                        <ProtectedRoute>
+                            <WorkoutPlans />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/scheduling" element={
+                        <ProtectedRoute>
+                            <Scheduling />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/member-dashboard" element={
+                        <ProtectedRoute>
+                            <MemberDashboard />
+                        </ProtectedRoute>
+                    } />
                     <Route
                         path="/profile"
                         element={
@@ -81,7 +99,8 @@ function HomeRedirect() {
 
     switch (user.role) {
         case 'member':
-        case 'trainer':
+            return <Navigate to="/member-dashboard" />;
+        case ' trainer':
             return <Navigate to="/gyms" />;
         case 'gym':
             return <Navigate to="/gym-dashboard" />;

@@ -43,8 +43,15 @@ const Navbar = () => {
                             )}
                             {user.role === 'member' && (
                                 <>
+                                    <Link to="/member-dashboard" className="text-white mr-4">Dashboard</Link>
                                     <Link to="/macro-calculator" className="text-white mr-4">Macro Calculator</Link>
                                     <Link to="/progress-tracker" className="text-white mr-4">Progress Tracker</Link>
+                                </>
+                            )}
+                            {user.role === 'trainer' && userDetails?.gym && (
+                                <>
+                                    <Link to="/workout-plans" className="text-white mr-4">Workout Plans</Link>
+                                    <Link to="/scheduling" className="text-white mr-4">Scheduling</Link>
                                 </>
                             )}
                             <Link to="/profile" className="text-white mr-4">Profile</Link>
