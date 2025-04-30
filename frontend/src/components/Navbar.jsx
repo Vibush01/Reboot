@@ -28,6 +28,12 @@ const Navbar = () => {
                                     <Link to="/gyms" className="text-white mr-4">Find Gym</Link>
                                 )
                             )}
+                            {user.role === 'member' && (
+                                <>
+                                    <Link to="/macro-calculator" className="text-white mr-4">Macro Calculator</Link>
+                                    <Link to="/progress-tracker" className="text-white mr-4">Progress Tracker</Link>
+                                </>
+                            )}
                             <Link to="/profile" className="text-white mr-4">Profile</Link>
                             <button onClick={handleLogout} className="text-white">Logout</button>
                         </>

@@ -1,5 +1,6 @@
+import { useContext } from 'react'; // Import useContext from react
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, AuthContext } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import RoleSelection from './pages/RoleSelection';
@@ -12,6 +13,8 @@ import Profile from './pages/Profile';
 import GymList from './pages/GymList';
 import GymProfile from './pages/GymProfile';
 import GymDashboard from './pages/GymDashboard';
+import MacroCalculator from './pages/MacroCalculator';
+import ProgressTracker from './pages/ProgressTracker';
 
 function App() {
     return (
@@ -19,7 +22,6 @@ function App() {
             <Router>
                 <Navbar />
                 <Routes>
-                    {/* Homepage redirects based on user role */}
                     <Route path="/" element={<HomeRedirect />} />
                     <Route path="/signup" element={<RoleSelection />} />
                     <Route path="/signup/admin" element={<AdminSignup />} />
@@ -32,6 +34,16 @@ function App() {
                     <Route path="/gym-dashboard" element={
                         <ProtectedRoute>
                             <GymDashboard />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/macro-calculator" element={
+                        <ProtectedRoute>
+                            <MacroCalculator />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/progress-tracker" element={
+                        <ProtectedRoute>
+                            <ProgressTracker />
                         </ProtectedRoute>
                     } />
                     <Route
@@ -48,7 +60,6 @@ function App() {
     );
 }
 
-// Component to redirect based on user role
 function HomeRedirect() {
     const { user } = useContext(AuthContext);
     
