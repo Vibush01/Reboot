@@ -9,8 +9,8 @@ const GymProfile = () => {
     const { user, userDetails } = useContext(AuthContext);
     const [gym, setGym] = useState(null);
     const [error, setError] = useState('');
-    const [membershipDuration, setMembershipDuration] = useState('1 month');
     const [success, setSuccess] = useState('');
+    const [membershipDuration, setMembershipDuration] = useState('1 month');
 
     useEffect(() => {
         const fetchGym = async () => {
@@ -21,6 +21,7 @@ const GymProfile = () => {
                 setError('Failed to fetch gym details');
             }
         };
+
         fetchGym();
     }, [id]);
 

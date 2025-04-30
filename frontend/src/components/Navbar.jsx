@@ -11,6 +11,13 @@ const Navbar = () => {
         navigate('/login');
     };
 
+    // Determine if the user can access the Chat page
+    const canAccessChat = () => {
+        if (!user) return false;
+        if (user.role === 'gym') return true; // Gym Profiles can always access Chat
+        return (user.role === 'member' || user.role === 'trainer') && userDetails?.gym; // Members and Trainers need to be in a gym
+    };
+
     return (
         <nav className="bg-blue-600 p-4">
             <div className="container mx-auto flex justify-between items-center">
@@ -27,6 +34,12 @@ const Navbar = () => {
                                 ) : (
                                     <Link to="/gyms" className="text-white mr-4">Find Gym</Link>
                                 )
+                            )}
+                            {canAccessChat() && (
+                                <Link to="/chat" className="text-white mr-4">Chat</Link>
+                            )}
+                            {user.role === 'member' && userDetails?.gym && (
+                                <Link to="/announcements" className="text-white mr-4">Announcements</Link>
                             )}
                             {user.role === 'member' && (
                                 <>
