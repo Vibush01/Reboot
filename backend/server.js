@@ -3,6 +3,8 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const configureCloudinary = require('./config/cloudinary');
+const authRoutes = require('./routes/auth');
+const gymRoutes = require('./routes/gym');
 
 dotenv.config();
 const app = express();
@@ -14,6 +16,10 @@ app.use(express.json());
 // Connect to MongoDB and Cloudinary
 connectDB();
 configureCloudinary();
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/gym', gymRoutes);
 
 // Test Route
 app.get('/api/test', (req, res) => {
