@@ -8,6 +8,7 @@ const Gym = require('../models/Gym');
 const Member = require('../models/Member');
 const Trainer = require('../models/Trainer');
 const JoinRequest = require('../models/JoinRequest');
+const EventLog = require('../models/EventLog');
 
 // Configure Multer for file uploads
 const storage = multer.memoryStorage();
@@ -17,6 +18,27 @@ const upload = multer({ storage });
 router.get('/', async (req, res) => {
     try {
         const gyms = await Gym.find().select('-password');
+
+        // Log page view event if user is authenticated
+        if (req.headers.authorization) {
+            const token = req.headers.authorization.split(' ')[1];
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const userModelMap = {
+                admin: 'Admin',
+                gym: 'Gym',
+                trainer: 'Trainer',
+                member: 'Member',
+            };
+            const eventLog = new EventLog({
+                event: 'Page View',
+                page: '/gyms',
+                user: decoded.id,
+                userModel: userModelMap[decoded.role],
+                details: `${userModelMap[decoded.role]} viewed gym list`,
+            });
+            await eventLog.save();
+        }
+
         res.json(gyms);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
@@ -78,6 +100,16 @@ router.post('/join/:gymId', authMiddleware, async (req, res) => {
         gym.joinRequests.push(joinRequest._id);
         await gym.save();
 
+        // Log the join request event
+        const eventLog = new EventLog({
+            event: 'Join Request',
+            page: `/gym/${req.params.gymId}`,
+            user: req.user.id,
+            userModel: req.user.role === 'member' ? 'Member' : 'Trainer',
+            details: `${req.user.role === 'member' ? 'Member' : 'Trainer'} sent join request to gym ${gym.gymName}`,
+        });
+        await eventLog.save();
+
         res.status(201).json({ message: 'Join request sent', joinRequest });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
@@ -130,6 +162,17 @@ router.put('/update', authMiddleware, upload.array('photos', 5), async (req, res
         }
 
         await gym.save();
+
+        // Log the gym update event
+        const eventLog = new EventLog({
+            event: 'Gym Update',
+            page: '/update-gym',
+            user: req.user.id,
+            userModel: 'Gym',
+            details: `Gym ${gym.gymName} updated details`,
+        });
+        await eventLog.save();
+
         res.json({ message: 'Gym updated', gym });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
@@ -248,6 +291,16 @@ router.post('/requests/:requestId/accept', authMiddleware, async (req, res) => {
         await user.save();
         await gym.save();
 
+        // Log the join request acceptance event
+        const eventLog = new EventLog({
+            event: 'Join Request Accepted',
+            page: '/gym-dashboard',
+            user: req.user.id,
+            userModel: req.user.role === 'gym' ? 'Gym' : 'Trainer',
+            details: `${req.user.role === 'gym' ? 'Gym' : 'Trainer'} accepted join request from ${joinRequest.userModel} ${joinRequest.user.name}`,
+        });
+        await eventLog.save();
+
         res.json({ message: 'Request accepted' });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
@@ -287,6 +340,16 @@ router.post('/requests/:requestId/deny', authMiddleware, async (req, res) => {
         joinRequest.status = 'denied';
         await joinRequest.save();
 
+        // Log the join request denial event
+        const eventLog = new EventLog({
+            event: 'Join Request Denied',
+            page: '/gym-dashboard',
+            user: req.user.id,
+            userModel: req.user.role === 'gym' ? 'Gym' : 'Trainer',
+            details: `${req.user.role === 'gym' ? 'Gym' : 'Trainer'} denied join request from ${joinRequest.userModel}`,
+        });
+        await eventLog.save();
+
         res.json({ message: 'Request denied' });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
@@ -303,6 +366,27 @@ router.get('/:id', async (req, res) => {
         if (!gym) {
             return res.status(404).json({ message: 'Gym not found' });
         }
+
+        // Log page view event if user is authenticated
+        if (req.headers.authorization) {
+            const token = req.headers.authorization.split(' ')[1];
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const userModelMap = {
+                admin: 'Admin',
+                gym: 'Gym',
+                trainer: 'Trainer',
+                member: 'Member',
+            };
+            const eventLog = new EventLog({
+                event: 'Page View',
+                page: `/gym/${req.params.id}`,
+                user: decoded.id,
+                userModel: userModelMap[decoded.role],
+                details: `${userModelMap[decoded.role]} viewed gym ${gym.gymName}`,
+            });
+            await eventLog.save();
+        }
+
         res.json(gym);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });

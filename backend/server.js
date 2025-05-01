@@ -8,6 +8,7 @@ const gymRoutes = require('./routes/gym');
 const memberRoutes = require('./routes/member');
 const chatRoutes = require('./routes/chat');
 const trainerRoutes = require('./routes/trainer');
+const adminRoutes = require('./routes/admin');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const ChatMessage = require('./models/ChatMessage');
@@ -77,6 +78,7 @@ app.use('/api/gym', gymRoutes);
 app.use('/api/member', memberRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/trainer', trainerRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Test Route
 app.get('/api/test', (req, res) => {

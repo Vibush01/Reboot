@@ -25,6 +25,7 @@ import ManageSchedule from './pages/ManageSchedule';
 import ViewBookings from './pages/ViewBookings';
 import BookSession from './pages/BookSession';
 import UpdateGym from './pages/UpdateGym';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
     return (
@@ -106,6 +107,11 @@ function App() {
                             <UpdateGym />
                         </ProtectedRoute>
                     } />
+                    <Route path="/admin-dashboard" element={
+                        <ProtectedRoute>
+                            <AdminDashboard />
+                        </ProtectedRoute>
+                    } />
                     <Route
                         path="/profile"
                         element={
@@ -135,7 +141,7 @@ function HomeRedirect() {
         case 'gym':
             return <Navigate to="/gym-dashboard" />;
         case 'admin':
-            return <Navigate to="/profile" />;
+            return <Navigate to="/admin-dashboard" />;
         default:
             return <Navigate to="/login" />;
     }

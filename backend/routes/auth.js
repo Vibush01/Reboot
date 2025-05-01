@@ -8,6 +8,7 @@ const Admin = require('../models/Admin');
 const Gym = require('../models/Gym');
 const Trainer = require('../models/Trainer');
 const Member = require('../models/Member');
+const EventLog = require('../models/EventLog');
 const authMiddleware = require('../middleware/auth');
 
 // Configure Multer for file uploads
@@ -65,6 +66,16 @@ router.post('/register', upload.array('photos', 5), async (req, res) => {
 
         await user.save();
 
+        // Log the registration event
+        const eventLog = new EventLog({
+            event: 'Register',
+            page: 'N/A',
+            user: user._id,
+            userModel: role.charAt(0).toUpperCase() + role.slice(1),
+            details: `${role.charAt(0).toUpperCase() + role.slice(1)} registered`,
+        });
+        await eventLog.save();
+
         const token = jwt.sign(
             { id: user._id, role: user.role },
             process.env.JWT_SECRET,
@@ -115,6 +126,16 @@ router.post('/login', async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
+
+        // Log the login event
+        const eventLog = new EventLog({
+            event: 'Login',
+            page: 'N/A',
+            user: user._id,
+            userModel: role.charAt(0).toUpperCase() + role.slice(1),
+            details: `${role.charAt(0).toUpperCase() + role.slice(1)} logged in`,
+        });
+        await eventLog.save();
 
         const token = jwt.sign(
             { id: user._id, role: user.role },
@@ -205,6 +226,16 @@ router.put('/profile', authMiddleware, upload.single('profileImage'), async (req
         }
 
         await user.save();
+
+        // Log the profile update event
+        const eventLog = new EventLog({
+            event: 'Profile Update',
+            page: '/profile',
+            user: user._id,
+            userModel: req.user.role.charAt(0).toUpperCase() + req.user.role.slice(1),
+            details: `${req.user.role.charAt(0).toUpperCase() + req.user.role.slice(1)} updated profile`,
+        });
+        await eventLog.save();
 
         res.json({ message: 'Profile updated', user: { id: user._id, name: user.name, email: user.email, role: user.role, profileImage: user.profileImage } });
     } catch (error) {
