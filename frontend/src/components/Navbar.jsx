@@ -18,6 +18,11 @@ const Navbar = () => {
         return (user.role === 'member' || user.role === 'trainer') && userDetails?.gym; // Members and Trainers need to be in a gym
     };
 
+    // Determine if the user can access gym-dependent features (Request Plan, Book a Session)
+    const canAccessGymFeatures = () => {
+        return user?.role === 'member' && userDetails?.gym;
+    };
+
     return (
         <nav className="bg-blue-600 p-4">
             <div className="container mx-auto flex justify-between items-center">
@@ -32,7 +37,7 @@ const Navbar = () => {
                                 userDetails?.gym ? (
                                     <Link to={`/gym/${userDetails.gym}`} className="text-white mr-4">My Gym</Link>
                                 ) : (
-                                    <Link to="/gyms" className="text-white mr-4">Find Gym</Link>
+                                    <Link to="/gyms" className="text-white mr-4">Find a Gym</Link>
                                 )
                             )}
                             {canAccessChat() && (
@@ -44,6 +49,12 @@ const Navbar = () => {
                             {user.role === 'member' && (
                                 <>
                                     <Link to="/member-dashboard" className="text-white mr-4">Dashboard</Link>
+                                    {canAccessGymFeatures() && (
+                                        <>
+                                            <Link to="/request-plan" className="text-white mr-4">Request Plan</Link>
+                                            <Link to="/book-session" className="text-white mr-4">Book a Session</Link>
+                                        </>
+                                    )}
                                     <Link to="/macro-calculator" className="text-white mr-4">Macro Calculator</Link>
                                     <Link to="/progress-tracker" className="text-white mr-4">Progress Tracker</Link>
                                 </>
@@ -51,8 +62,13 @@ const Navbar = () => {
                             {user.role === 'trainer' && userDetails?.gym && (
                                 <>
                                     <Link to="/workout-plans" className="text-white mr-4">Workout Plans</Link>
-                                    <Link to="/scheduling" className="text-white mr-4">Scheduling</Link>
+                                    <Link to="/manage-schedule" className="text-white mr-4">Manage Schedule</Link>
+                                    <Link to="/view-bookings" className="text-white mr-4">View Bookings</Link>
+                                    {/* <Link to="/scheduling" className="text-white mr-4">Scheduling</Link> */}
                                 </>
+                            )}
+                            {user.role === 'gym' && (
+                                <Link to="/update-gym" className="text-white mr-4">Update Gym</Link>
                             )}
                             <Link to="/profile" className="text-white mr-4">Profile</Link>
                             <button onClick={handleLogout} className="text-white">Logout</button>

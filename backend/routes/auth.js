@@ -157,8 +157,8 @@ router.get('/profile', authMiddleware, async (req, res) => {
 });
 
 // Update Profile
-router.put('/profile', authMiddleware, async (req, res) => {
-    const { name, email, password, profileImage } = req.body;
+router.put('/profile', authMiddleware, upload.single('profileImage'), async (req, res) => {
+    const { name, password } = req.body;
 
     try {
         let user;
@@ -187,16 +187,26 @@ router.put('/profile', authMiddleware, async (req, res) => {
         }
 
         if (name) user.name = name;
-        if (email) user.email = email;
         if (password) {
             const salt = await bcrypt.genSalt(10);
             user.password = await bcrypt.hash(password, salt);
         }
-        if (profileImage) user.profileImage = profileImage;
+        if (req.file) {
+            const uploadResult = await new Promise((resolve, reject) => {
+                cloudinary.uploader.upload_stream(
+                    { folder: 'profile_images' },
+                    (error, result) => {
+                        if (error) reject(error);
+                        resolve(result.secure_url);
+                    }
+                ).end(req.file.buffer);
+            });
+            user.profileImage = uploadResult;
+        }
 
         await user.save();
 
-        res.json({ message: 'Profile updated', user: { id: user._id, email: user.email, role: user.role } });
+        res.json({ message: 'Profile updated', user: { id: user._id, name: user.name, email: user.email, role: user.role, profileImage: user.profileImage } });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }

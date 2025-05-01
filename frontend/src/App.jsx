@@ -18,8 +18,13 @@ import ProgressTracker from './pages/ProgressTracker';
 import Chat from './pages/Chat';
 import Announcements from './pages/Announcements';
 import WorkoutPlans from './pages/WorkoutPlans';
-import Scheduling from './pages/Scheduling';
+// import Scheduling from './pages/Scheduling';
 import MemberDashboard from './pages/MemberDashboard';
+import RequestPlan from './pages/RequestPlan';
+import ManageSchedule from './pages/ManageSchedule';
+import ViewBookings from './pages/ViewBookings';
+import BookSession from './pages/BookSession';
+import UpdateGym from './pages/UpdateGym';
 
 function App() {
     return (
@@ -66,14 +71,39 @@ function App() {
                             <WorkoutPlans />
                         </ProtectedRoute>
                     } />
-                    <Route path="/scheduling" element={
+                    {/* <Route path="/scheduling" element={
                         <ProtectedRoute>
                             <Scheduling />
                         </ProtectedRoute>
-                    } />
+                    } /> */}
                     <Route path="/member-dashboard" element={
                         <ProtectedRoute>
                             <MemberDashboard />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/request-plan" element={
+                        <ProtectedRoute>
+                            <RequestPlan />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/manage-schedule" element={
+                        <ProtectedRoute>
+                            <ManageSchedule />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/view-bookings" element={
+                        <ProtectedRoute>
+                            <ViewBookings />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/book-session" element={
+                        <ProtectedRoute>
+                            <BookSession />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/update-gym" element={
+                        <ProtectedRoute>
+                            <UpdateGym />
                         </ProtectedRoute>
                     } />
                     <Route
@@ -100,7 +130,7 @@ function HomeRedirect() {
     switch (user.role) {
         case 'member':
             return <Navigate to="/member-dashboard" />;
-        case ' trainer':
+        case 'trainer':
             return <Navigate to="/gyms" />;
         case 'gym':
             return <Navigate to="/gym-dashboard" />;
