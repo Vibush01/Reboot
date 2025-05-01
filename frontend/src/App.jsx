@@ -26,6 +26,8 @@ import ViewBookings from './pages/ViewBookings';
 import BookSession from './pages/BookSession';
 import UpdateGym from './pages/UpdateGym';
 import AdminDashboard from './pages/AdminDashboard';
+import Home from './pages/Home';
+import GymReview from './pages/GymReview';
 
 function App() {
     return (
@@ -33,7 +35,7 @@ function App() {
             <Router>
                 <Navbar />
                 <Routes>
-                    <Route path="/" element={<HomeRedirect />} />
+                    <Route path="/" element={<Home />} />
                     <Route path="/signup" element={<RoleSelection />} />
                     <Route path="/signup/admin" element={<AdminSignup />} />
                     <Route path="/signup/gym" element={<GymSignup />} />
@@ -112,6 +114,11 @@ function App() {
                             <AdminDashboard />
                         </ProtectedRoute>
                     } />
+                    <Route path="/gym-review" element={
+                        <ProtectedRoute>
+                            <GymReview />
+                        </ProtectedRoute>
+                    } />
                     <Route
                         path="/profile"
                         element={
@@ -130,7 +137,7 @@ function HomeRedirect() {
     const { user } = useContext(AuthContext);
     
     if (!user) {
-        return <Navigate to="/login" />;
+        return <Navigate to="/" />;
     }
 
     switch (user.role) {

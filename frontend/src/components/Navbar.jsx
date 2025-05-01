@@ -19,7 +19,7 @@ const Navbar = () => {
         return (user.role === 'member' || user.role === 'trainer') && userDetails?.gym; // Members and Trainers need to be in a gym
     };
 
-    // Determine if the user can access gym-dependent features (Request Plan, Book a Session)
+    // Determine if the user can access gym-dependent features (Request Plan, Book a Session, Gym Review)
     const canAccessGymFeatures = () => {
         return user?.role === 'member' && userDetails?.gym;
     };
@@ -66,6 +66,7 @@ const Navbar = () => {
                                         <>
                                             <Link to="/request-plan" className="text-white hover:underline">Request Plan</Link>
                                             <Link to="/book-session" className="text-white hover:underline">Book a Session</Link>
+                                            <Link to="/gym-review" className="text-white hover:underline">Gym Review</Link>
                                         </>
                                     )}
                                     <Link to="/macro-calculator" className="text-white hover:underline">Macro Calculator</Link>
@@ -127,6 +128,7 @@ const Navbar = () => {
                                             <>
                                                 <Link to="/request-plan" className="text-white hover:underline" onClick={() => setIsOpen(false)}>Request Plan</Link>
                                                 <Link to="/book-session" className="text-white hover:underline" onClick={() => setIsOpen(false)}>Book a Session</Link>
+                                                <Link to="/gym-review" className="text-white hover:underline" onClick={() => setIsOpen(false)}>Gym Review</Link>
                                             </>
                                         )}
                                         <Link to="/macro-calculator" className="text-white hover:underline" onClick={() => setIsOpen(false)}>Macro Calculator</Link>

@@ -33,6 +33,9 @@ const MemberDashboard = () => {
                                 <Link to="/book-session" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-center">
                                     Book a Session
                                 </Link>
+                                <Link to="/gym-review" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-center">
+                                    Review Your Gym
+                                </Link>
                             </>
                         ) : (
                             <Link to="/gyms" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-center">
